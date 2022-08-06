@@ -1,0 +1,11 @@
+reddit_user:
+    client_id: client_id
+    client_secret: client_secret
+    user_agent: user_agent
+
+email_user:
+    email: email@gmail.com
+    app_password: app_password
+
+recipient_list:
+    users: users
