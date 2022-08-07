@@ -50,7 +50,7 @@ def time_event(is_daily_check):
     # Handles scheduler/cron specifications
     if arguments.cron is False:  # Bypass scheduler for cron
         if not is_daily_check:  # Weekly check
-            schedule.every().week.saturday.at("08:00").do(send_freebies, is_daily_check)
+            schedule.every().week.saturday.at("06:00").do(send_freebies, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
@@ -71,7 +71,7 @@ def schedule_handler(schedule_obj, sleep_time):
     # Checks if there is a pending scheduled job every 30 minutes
     schedule_obj.run_pending()
 
-    time.sleep(sleep_time)
+    time.sleep(sleep_time * 60)
 
 
 # Threading needs the extra comma in the args field or else it thinks it is more than one argument (requires tuple)
