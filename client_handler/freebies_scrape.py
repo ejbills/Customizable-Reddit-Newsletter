@@ -18,11 +18,11 @@ def scrape_top_posts(is_daily_check) -> list:
     parsed_submissions = []
 
     if not is_daily_check:
-        for submission in reddit.subreddit("freebies").top("week", limit=20):
+        for submission in reddit.subreddit("freebies").top("week"):
             if contains_flair(submission) and not is_stickied(submission):
                 parsed_submissions.append([submission.title, submission.url])
     else:
-        for submission in reddit.subreddit("freebies").hot():
+        for submission in reddit.subreddit("freebies").top("hour"):
             if is_urgent(submission) and contains_flair(submission) and not is_stickied(submission):
                 parsed_submissions.append(["ONLY TODAY : " + submission.title, submission.url])
 

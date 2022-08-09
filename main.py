@@ -56,12 +56,10 @@ def time_event(is_daily_check):
                 schedule_handler(schedule, 30)
 
         else:  # Daily check
-            schedule.every().day.at("06:00").do(send_freebies, is_daily_check)
-            schedule.every().day.at("12:00").do(send_freebies, is_daily_check)
-            schedule.every().day.at("18:00").do(send_freebies, is_daily_check)
+            schedule.every().hour.do(send_freebies(is_daily_check))
 
             while True:
-                schedule_handler(schedule, 30)
+                schedule_handler(schedule, 1)
 
     else:  # cron schedule specified
         send_freebies(arguments.daily)
