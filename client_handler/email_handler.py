@@ -1,33 +1,46 @@
-import smtplib
 import yaml
+import pandas as pd
 
-from email.message import EmailMessage
+from redmail import gmail
+from datetime import date
 
 conf = yaml.safe_load(open('./conf/application.yaml'))
 
-email = conf['email_user']['email']
+email_user = conf['email_user']['email']
 password = conf['email_user']['app_password']
 
 
 def send_email(mail_list, mail_body):
     # Sends email
-    email_message = EmailMessage()
 
-    email_message['Subject'] = 'Freebies Mailing List'
-    email_message['From'] = email
-    email_message['To'] = mail_list
-    email_message.set_content(format_email(mail_body))
+    gmail.username = email_user
+    gmail.password = password
 
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-        smtp.login(email, password)
-        smtp.send_message(email_message)
+    formatted_mail = format_email(mail_body)
+
+    gmail.send(
+        subject="Freebies for " + date.today().strftime("%B %d, %Y"),
+        receivers=mail_list,
+        html="{{ formatted_mail }}",
+        body_tables={
+            'formatted_mail': formatted_mail
+        }
+    )
 
 
 def format_email(mail_body):
     # Formats the parsed freebie data, data comes in a nested array
-    formatted_data = ""
+
+    data = []
 
     for i in range(len(mail_body)):
-        formatted_data += mail_body[i][0] + " : " + mail_body[i][1] + "\n \n"
+        data.append(
+            {
+                'Title': mail_body[i][0],
+                'Link': mail_body[i][1],
+            }
+        )
 
-    return formatted_data
+    return pd.DataFrame(data)
+
+

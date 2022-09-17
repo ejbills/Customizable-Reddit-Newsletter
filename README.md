@@ -9,7 +9,7 @@ Configure application.yaml in the conf/ directory (be careful not to add this in
 
 To run this program on a cron schedule, specify **--cron True** (runs the weekly check). To run the cron job specified for the daily check, include **--cron True --daily True** in the build command.
 
-If you wish to utilize the built-in scheduled freebies scrape, include no flags within the build command. This will default the program to run a check every Saturday at 10:00AM, with daily checks every hour.
+If you wish to utilize the built-in scheduled freebies scrape, include no flags within the build command. This will default the program to run a check every Saturday at 6:00AM, with daily checks every hour.
 
 ```bash
   py main.py --cron [True/False] --daily [True/False]
