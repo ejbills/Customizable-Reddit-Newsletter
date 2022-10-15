@@ -1,0 +1,5 @@
+schedule
+PyYAML
+pandas
+redmail
+praw
