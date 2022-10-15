@@ -1,16 +1,14 @@
 import praw
-import yaml
 
-conf = yaml.safe_load(open('./conf/application.yaml'))
+from os import environ
 
-client_id = conf['reddit_user']['client_id']
-client_secret = conf['reddit_user']['client_secret']
-user_agent = conf['reddit_user']['user_agent']
+client_id = environ['CLIENT_ID']
+client_secret = environ['CLIENT_SECRET']
 
 reddit = praw.Reddit(
     client_id=client_id,
     client_secret=client_secret,
-    user_agent=user_agent
+    user_agent="Freebies scrape"
 )
 
 

@@ -1,13 +1,11 @@
-import yaml
 import pandas as pd
 
 from redmail import gmail
 from datetime import date
+from os import environ
 
-conf = yaml.safe_load(open('./conf/application.yaml'))
-
-email_user = conf['email_user']['email']
-password = conf['email_user']['app_password']
+email_user = environ['EMAIL']
+password = environ['APP_PASS']
 
 
 def send_email(mail_list, mail_body):
