@@ -24,7 +24,7 @@ arguments = parser.parse_args()
 def main():
     # Start program
     if not arguments.cron:
-        print("cron not specified, defaulting to running once a week (every Saturday @ 10AM LOCAL) with daily checks")
+        print("cron not specified, defaulting to running once a week (every Saturday @ 6AM LOCAL) with daily checks")
         time_event(False)
 
     else:
@@ -66,7 +66,7 @@ def time_event(is_daily_check):
 
 
 def schedule_handler(schedule_obj, sleep_time):
-    # Checks if there is a pending scheduled job every 30 minutes
+    # Checks if there is a pending scheduled job every X (specified as sleep_time) minutes
     schedule_obj.run_pending()
 
     time.sleep(sleep_time * 60)
