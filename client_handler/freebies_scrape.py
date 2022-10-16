@@ -20,9 +20,9 @@ def scrape_top_posts(is_daily_check) -> list:
             if contains_flair(submission) and not is_stickied(submission):
                 parsed_submissions.append([submission.title, submission.url])
     else:
-        for submission in reddit.subreddit("freebies").top("hour"):
+        for submission in reddit.subreddit("freebies").top("day"):
             if is_urgent(submission) and contains_flair(submission) and not is_stickied(submission):
-                parsed_submissions.append(["ONLY TODAY : " + submission.title, submission.url])
+                parsed_submissions.append(["HOT TODAY : " + submission.title, submission.url])
 
     return parsed_submissions
 
@@ -41,5 +41,5 @@ def is_stickied(submission) -> bool:
 
 
 def is_urgent(submission) -> bool:
-    # Checks if a post title contains "today" keyword, marked as urgent if true
-    return "today" in submission.title.lower()
+    # Checks if a post is considered as "urgent" - this is defined as over 200 upvotes on the post in a given day
+    return submission.score > 200
