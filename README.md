@@ -9,11 +9,11 @@ Configure application.yaml in the conf/ directory to specify the list of emails 
 
 To run this command, you will need to specify multiple key values as environment variables that the script will then pull in through the OS.
 The required environment variables are as follows:
-```shell
-ENV CLIENT_ID='client_id'; \
-ENV CLIENT_SECRET='client_secret'; \
-ENV EMAIL='email'; \
-ENV APP_PASS='app_pass'; 
+```bash
+export CLIENT_ID='client_id'; \
+export CLIENT_SECRET='client_secret'; \
+export EMAIL='email'; \
+export APP_PASS='app_pass'; 
 ```
 
 To run this program on a cron schedule, specify **--cron True** (runs the weekly check). To run the cron job specified for the daily check, include **--cron True --daily True** in the build command.
@@ -26,12 +26,12 @@ If you wish to utilize the built-in scheduled freebies scrape, include no flags 
 
 ## Docker
 To build the docker image:
-```shell
+```bash
 docker build -t freebies:latest . 
 ```
 
 To run the docker image, you must specify the key values as environment variables as follows:
-```shell
+```bash
 docker run -e CLIENT_ID='client_id' \
 -e CLIENT_SECRET='client_secret' \
 -e EMAIL='email' \
