@@ -12,27 +12,33 @@ reddit = praw.Reddit(
 )
 
 
-def scrape_top_posts(is_daily_check) -> list:
+def scrape_top_posts(is_daily_check, filter_dict, subreddit) -> list:
     parsed_submissions = []
 
     if not is_daily_check:
-        for submission in reddit.subreddit("freebies").top("week"):
-            if contains_flair(submission) and not is_stickied(submission):
+        for submission in reddit.subreddit(subreddit).top("week"):
+            if contains_flairs(filter_dict, submission) and not is_stickied(submission):
                 parsed_submissions.append([submission.title, submission.url])
     else:
-        for submission in reddit.subreddit("freebies").top("day"):
-            if is_urgent(submission) and contains_flair(submission) and not is_stickied(submission):
+        for submission in reddit.subreddit(subreddit).top("day"):
+            if is_urgent(submission) and contains_flairs(filter_dict, submission) and not is_stickied(submission):
                 parsed_submissions.append(["HOT TODAY : " + submission.title, submission.url])
 
     return parsed_submissions
 
 
-def contains_flair(submission) -> bool:
-    # Checks if the post flair contains the US and is not expired
-    us_in_flair = "us " in submission.link_flair_text.lower()
-    expired_not_in_flair = "expired" not in submission.link_flair_text.lower()
+def contains_flairs(filter_dict, submission) -> bool:
+    # Checks if the post flair passes validation based on dictionary flair values
 
-    return us_in_flair and expired_not_in_flair
+    for val in filter_dict['required_flairs']:
+        if val not in submission.link_flair_text.lower():
+            return False
+
+    for val in filter_dict['restricted_flairs']:
+        if val in submission.link_flair_text.lower():
+            return False
+
+    return True  # Everything passed, post is valid
 
 
 def is_stickied(submission) -> bool:

@@ -36,14 +36,29 @@ def main():
 
 def send_freebies(is_daily_check):
     # Handles execution of scraping posts and sending email to mailing list
-    top_freebies = freebies_scrape.scrape_top_posts(is_daily_check)
+    parsed_posts = {}
 
-    print(str(len(top_freebies)) + " results returned")
+    parsed_posts['freebies'] = freebies_scrape.scrape_top_posts(is_daily_check,
+                                                                {'required_flairs': ['us only'],
+                                                                 'restricted_flairs': ['expired']},
+                                                                'freebies')
 
-    if top_freebies:  # Check if any results are returned
+    parsed_posts['frugalmalefashion'] = freebies_scrape.scrape_top_posts(is_daily_check,
+                                                                {'required_flairs': ['asfsadklfjhsdhjkfg'],
+                                                                 'restricted_flairs': ['expired']},
+                                                                'frugalmalefashion')
+
+    parsed_posts['frugalfemalefashion'] = freebies_scrape.scrape_top_posts(is_daily_check,
+                                                                {'required_flairs': ['sadfsdkfjsdfikhj'],
+                                                                 'restricted_flairs': ['expired']},
+                                                                'frugalfemalefashion')
+
+    print(str(len(parsed_posts)) + " results returned")
+
+    if parsed_posts:  # Check if any results are returned
         print("Sending daily freebies") if is_daily_check else print("Sending weekly freebies")
 
-        email_handler.send_email(mail_list, top_freebies)
+        email_handler.send_email(mail_list, parsed_posts)
 
 
 def time_event(is_daily_check):

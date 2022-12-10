@@ -8,25 +8,32 @@ email_user = environ['EMAIL']
 password = environ['APP_PASS']
 
 
-def send_email(mail_list, mail_body):
+def send_email(mail_list, parsed_posts_dict):
     # Sends email
 
     gmail.username = email_user
     gmail.password = password
 
-    formatted_mail = format_email(mail_body)
+    subreddit_list = parsed_posts_dict.keys()
+
+    formatted_html = format_html_body(subreddit_list)
+    formatted_tables = {}
+
+    for subreddit in parsed_posts_dict.keys():  # Convert data into pandas dataframe
+        formatted_tables[subreddit] = format_array(parsed_posts_dict[subreddit])
 
     gmail.send(
         subject="Freebies for " + date.today().strftime("%B %d, %Y"),
         receivers=mail_list,
-        html="{{ formatted_mail }}",
-        body_tables={
-            'formatted_mail': formatted_mail
-        }
+        html=formatted_html,
+        body_tables=formatted_tables,
+        body_params={
+            "subreddit_list": subreddit_list,
+        },
     )
 
 
-def format_email(mail_body):
+def format_array(mail_body):
     # Formats the parsed freebie data, data comes in a nested array
 
     data = []
@@ -42,3 +49,19 @@ def format_email(mail_body):
     return pd.DataFrame(data)
 
 
+def format_html_body(subreddit_list):
+    # Dynamically formats list of subreddit dataframes into html body for redmail to parse
+    output_string = ""
+
+    for subreddit in subreddit_list:
+        temp_subreddit = '{{ ' + subreddit + ' }}'
+
+        output_string += f"""
+        Results from the <b>{subreddit}</b> subreddit:
+        
+        {temp_subreddit}
+        <br>
+        <br>
+        """
+
+    return output_string
