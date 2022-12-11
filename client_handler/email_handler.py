@@ -25,7 +25,13 @@ def send_email(email, parsed_posts_dict):
     gmail.send(
         subject="Generated mail for " + date.today().strftime("%B %d, %Y"),
         receivers=email,
-        html=formatted_html,
+        html="""
+        <h1 style="color: #5e9ca0;">Here is your <span style="color: #2b2301;">custom weekly deals </span> email!</h1>
+        <h2 style="color: #2e6c80;">The following posts fit your criteria this week:</h2>""" + formatted_html +
+        """<p><strong>If you want to edit your subreddit preferences, please visit <a 
+        href="https://ethanbills.com/">this website</a> and be sure to save your changes.</strong><br 
+        /><strong>Enjoy!</strong></p>
+        """,
         body_tables=formatted_tables,
         body_params={
             "subreddit_list": subreddit_list,
