@@ -1,14 +1,11 @@
 import argparse
 import schedule
 import time
-import yaml
 import threading
+import csv
 
 from client_handler import email_handler, freebies_scrape
-
-conf = yaml.safe_load(open('./conf/application.yaml'))
-
-mail_list = conf['recipient_list']['users']
+from subreddit_config import subreddit_class
 
 # Handle arguments in command line
 parser = argparse.ArgumentParser()
@@ -36,29 +33,32 @@ def main():
 
 def send_freebies(is_daily_check):
     # Handles execution of scraping posts and sending email to mailing list
-    parsed_posts = {}
+    with open('conf/user_preferences.csv', 'r', encoding='utf-8-sig') as file:  # Import user-specific preferences
+        csv_reader = csv.reader(file)
 
-    parsed_posts['freebies'] = freebies_scrape.scrape_top_posts(is_daily_check,
-                                                                {'required_flairs': ['us only'],
-                                                                 'restricted_flairs': ['expired']},
-                                                                'freebies')
+        for line in csv_reader:
+            current_user = subreddit_class.SubredditConfig(line[0])
 
-    parsed_posts['frugalmalefashion'] = freebies_scrape.scrape_top_posts(is_daily_check,
-                                                                {'required_flairs': ['asfsadklfjhsdhjkfg'],
-                                                                 'restricted_flairs': ['expired']},
-                                                                'frugalmalefashion')
+            for subreddit_prefs in line[1:]:
+                temp_subreddit_prefs = subreddit_prefs.split("=")
 
-    parsed_posts['frugalfemalefashion'] = freebies_scrape.scrape_top_posts(is_daily_check,
-                                                                {'required_flairs': ['sadfsdkfjsdfikhj'],
-                                                                 'restricted_flairs': ['expired']},
-                                                                'frugalfemalefashion')
+                current_user.put_flair_prefs(temp_subreddit_prefs[0], temp_subreddit_prefs[1])
 
-    print(str(len(parsed_posts)) + " results returned")
+    for user_obj in subreddit_class.SubredditConfig.user_objects.values():
+        parsed_posts = {}
 
-    if parsed_posts:  # Check if any results are returned
-        print("Sending daily freebies") if is_daily_check else print("Sending weekly freebies")
+        for subreddit, flair_filter in user_obj.subreddit_config.items():
+            temp_scrape = freebies_scrape.scrape_top_posts(is_daily_check,
+                                                           flair_filter,
+                                                           subreddit)
 
-        email_handler.send_email(mail_list, parsed_posts)
+            if len(temp_scrape) > 0:  # Check if any results were returned
+                parsed_posts[subreddit] = temp_scrape
+
+        if parsed_posts:  # Check if final output is not empty
+            print("Sending daily freebies") if is_daily_check else print("Sending weekly freebies")
+
+            email_handler.send_email(user_obj.email, parsed_posts)
 
 
 def time_event(is_daily_check):

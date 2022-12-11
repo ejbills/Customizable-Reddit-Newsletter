@@ -8,7 +8,7 @@ email_user = environ['EMAIL']
 password = environ['APP_PASS']
 
 
-def send_email(mail_list, parsed_posts_dict):
+def send_email(email, parsed_posts_dict):
     # Sends email
 
     gmail.username = email_user
@@ -23,8 +23,8 @@ def send_email(mail_list, parsed_posts_dict):
         formatted_tables[subreddit] = format_array(parsed_posts_dict[subreddit])
 
     gmail.send(
-        subject="Freebies for " + date.today().strftime("%B %d, %Y"),
-        receivers=mail_list,
+        subject="Generated mail for " + date.today().strftime("%B %d, %Y"),
+        receivers=email,
         html=formatted_html,
         body_tables=formatted_tables,
         body_params={

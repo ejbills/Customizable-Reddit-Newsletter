@@ -8,7 +8,7 @@ client_secret = environ['CLIENT_SECRET']
 reddit = praw.Reddit(
     client_id=client_id,
     client_secret=client_secret,
-    user_agent="Freebies scrape"
+    user_agent="Scrape posts for data collection"
 )
 
 
