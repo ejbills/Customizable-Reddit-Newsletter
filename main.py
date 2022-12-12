@@ -1,3 +1,5 @@
+import conf.config
+
 import argparse
 import schedule
 import time
@@ -59,6 +61,8 @@ def send_freebies(is_daily_check):
             print("Sending daily freebies") if is_daily_check else print("Sending weekly freebies")
 
             email_handler.send_email(user_obj.email, parsed_posts)
+
+    conf.config.scraped_subreddits = {}  # Remove submissions from completed subreddit query
 
 
 def time_event(is_daily_check):

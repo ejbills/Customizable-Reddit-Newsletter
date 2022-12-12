@@ -1,5 +1,5 @@
 schedule
-PyYAML
 pandas
 redmail
 praw
+streamlit

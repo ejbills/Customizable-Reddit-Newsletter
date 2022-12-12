@@ -1,3 +1,5 @@
+import conf.config
+
 import praw
 
 from os import environ
@@ -16,13 +18,36 @@ def scrape_top_posts(is_daily_check, filter_dict, subreddit) -> list:
     parsed_submissions = []
 
     if not is_daily_check:
-        for submission in reddit.subreddit(subreddit).top("week"):
-            if contains_flairs(filter_dict, submission) and not is_stickied(submission):
-                parsed_submissions.append([submission.title, submission.url])
+        if subreddit not in conf.config.scraped_subreddits.keys():  # Subreddit not yet parsed
+            temp_submission_stream = []
+
+            for submission in reddit.subreddit(subreddit).top("week"):
+                temp_submission_stream.append(submission)  # Save submissions to prevent repeating search
+
+                if contains_flairs(filter_dict, submission) and not is_stickied(submission):
+                    parsed_submissions.append([submission.title, submission.url])
+
+            conf.config.scraped_subreddits[subreddit] = temp_submission_stream
+
+        else:
+            for submission in conf.config.scraped_subreddits[subreddit]:
+                if contains_flairs(filter_dict, submission) and not is_stickied(submission):
+                    parsed_submissions.append([submission.title, submission.url])
+
     else:
-        for submission in reddit.subreddit(subreddit).top("day"):
-            if is_urgent(submission) and contains_flairs(filter_dict, submission) and not is_stickied(submission):
-                parsed_submissions.append(["HOT TODAY : " + submission.title, submission.url])
+        if subreddit not in conf.config.scraped_subreddits.keys():  # Subreddit not yet parsed
+            temp_submission_stream = []
+
+            for submission in reddit.subreddit(subreddit).top("day"):
+                temp_submission_stream.append(submission)  # Save submissions to prevent repeating search
+
+                if is_urgent(submission) and contains_flairs(filter_dict, submission) and not is_stickied(submission):
+                    parsed_submissions.append(["HOT TODAY : " + submission.title, submission.url])
+
+        else:
+            for submission in conf.config.scraped_subreddits[subreddit]:
+                if is_urgent(submission) and contains_flairs(filter_dict, submission) and not is_stickied(submission):
+                    parsed_submissions.append(["HOT TODAY : " + submission.title, submission.url])
 
     return parsed_submissions
 
