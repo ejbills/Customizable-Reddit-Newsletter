@@ -4,7 +4,7 @@ import argparse
 import schedule
 import time
 import threading
-import csv
+import pandas as pd
 
 from client_handler import email_handler, freebies_scrape
 from subreddit_config import subreddit_class
@@ -35,16 +35,10 @@ def main():
 
 def send_freebies(is_daily_check):
     # Handles execution of scraping posts and sending email to mailing list
-    with open('conf/user_preferences.csv', 'r', encoding='utf-8-sig') as file:  # Import user-specific preferences
-        csv_reader = csv.reader(file)
+    df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 
-        for line in csv_reader:
-            current_user = subreddit_class.SubredditConfig(line[0])
-
-            for subreddit_prefs in line[1:]:
-                temp_subreddit_prefs = subreddit_prefs.split("=")
-
-                current_user.put_flair_prefs(temp_subreddit_prefs[0], temp_subreddit_prefs[1])
+    # Create user object in place
+    df.apply(lambda row: subreddit_class.SubredditConfig(row["Email"], row["Subreddits"].split('+')), axis=1)
 
     for user_obj in subreddit_class.SubredditConfig.user_objects.values():
         parsed_posts = {}
