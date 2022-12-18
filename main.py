@@ -5,6 +5,7 @@ import schedule
 import time
 import threading
 import pandas as pd
+from timeit import default_timer as timer
 
 from client_handler import email_handler, freebies_scrape
 from subreddit_config import subreddit_class
@@ -37,8 +38,9 @@ def send_freebies(is_daily_check):
     # Handles execution of scraping posts and sending email to mailing list
     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 
-    # Create user object in place
-    df.apply(lambda row: subreddit_class.SubredditConfig(row["Email"], row["Subreddits"].split('+')), axis=1)
+    # Create user objects in place
+    [subreddit_class.SubredditConfig(email, subreddit_prefs.split('+'))
+     for email, subreddit_prefs in zip(df['Email'], df['Subreddits'])]
 
     for user_obj in subreddit_class.SubredditConfig.user_objects.values():
         parsed_posts = {}
