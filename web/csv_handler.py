@@ -1,6 +1,15 @@
 import pandas as pd
 
 
+def add_user(email, subreddit_prefs):
+    # Adds formatted user data from web form to user csv file
+    df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
+
+    df.loc[len(df.index)] = [email, subreddit_prefs]
+
+    df.to_csv('./conf/user_preferences.csv', index=None, sep=';')
+
+
 def update_user_email(original_email, updated_email):
     # Updates user email using vectorized pandas dataframe
     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')

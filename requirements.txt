@@ -2,4 +2,4 @@ schedule
 pandas
 redmail
 praw
-streamlit
+pywebio
