@@ -5,7 +5,6 @@ import schedule
 import time
 import threading
 import pandas as pd
-from timeit import default_timer as timer
 
 from client_handler import email_handler, freebies_scrape
 from subreddit_config import subreddit_class
