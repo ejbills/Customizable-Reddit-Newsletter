@@ -4,7 +4,7 @@ from pywebio import start_server
 from pywebio.input import input, input_group, actions
 from pywebio.output import put_text
 
-from web import csv_handler
+import csv_handler
 
 
 def form():
