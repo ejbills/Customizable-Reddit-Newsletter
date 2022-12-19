@@ -26,17 +26,14 @@ def send_email(email, parsed_posts_dict):
         subject="Generated mail for " + date.today().strftime("%B %d, %Y"),
         receivers=email,
         html="""
-        <div style="margin: 15%;">
-            <h1 style="color: #5e8ea0; text-align: center;">Customized Reddit Newsletter</h1>
-            <hr style="width:80%">
-            <h2 style="color: #5e8ea0;">Please see below for the posts that fit your criteria this week!</h2>
-            """
-                 + formatted_html +
-            """
-            <p><strong>If you want to edit your subreddit preferences, please visit <a 
-            href="https://ethanbills.com/">this website</a> and be sure to save your changes.</strong><br 
-            /><strong>Enjoy!</strong></p>
-        </div>
+        <h1>Customized Reddit Newsletter</h1>
+        <h2>Please see below for the posts that fit your criteria this week!</h2>
+        """
+             + formatted_html +
+        """
+        <p><strong>If you want to edit your subreddit preferences, please visit <a 
+        href="https://ethanbills.com/">this website</a> and be sure to save your changes.</strong><br 
+        /><strong>Enjoy!</strong></p>
         """,
         body_tables=formatted_tables,
         body_params={
