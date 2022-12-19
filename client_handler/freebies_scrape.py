@@ -55,15 +55,10 @@ def scrape_top_posts(is_daily_check, filter_dict, subreddit) -> list:
 def contains_flairs(filter_dict, submission) -> bool:
     # Checks if the post flair passes validation based on dictionary flair values
     if submission.link_flair_text is not None:
-        for val in filter_dict['required_flairs']:
-            if val not in submission.link_flair_text.lower():
-                return False
+        required_flairs = any(flair in submission.link_flair_text.lower() for flair in filter_dict['required_flairs'])
+        restricted_flairs = not any(flair in submission.link_flair_text.lower() for flair in filter_dict['restricted_flairs'])
 
-        for val in filter_dict['restricted_flairs']:
-            if val in submission.link_flair_text.lower():
-                return False
-
-        return True  # Everything passed, post is valid
+        return required_flairs and restricted_flairs  # Everything passed, post is valid
 
     else:
         return False  # No flairs in post, can default to invalid
