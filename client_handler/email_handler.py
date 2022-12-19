@@ -25,53 +25,12 @@ def send_email(email, parsed_posts_dict):
     gmail.send(
         subject="Generated mail for " + date.today().strftime("%B %d, %Y"),
         receivers=email,
-        sender="Customized Reddit Newsletter",
         html="""
-        <td class="esd-block-spacer es-p10t es-p10b esd-hover-drag-disabled" style="font-size:0" align="center">
-            <table width="100%" height="100%" cellspacing="0" cellpadding="0" border="0">
-                <tbody>
-                    <tr>
-                        <td class="esd-structure es-p20t es-p20r es-p20l" align="left">
-                            <table width="100%" cellspacing="0" cellpadding="0">
-                                <tbody>
-                                    <tr>
-                                        <td class="esd-container-frame" width="560" valign="top" align="center">
-                                            <table width="100%" cellspacing="0" cellpadding="0">
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="esd-block-text" align="center">
-                                                            <h2>Customized Reddit Newsletter<br></h2>
-                                                            <tr>
-                                                                <td style="border-bottom: 2px solid #53c7b4; background: none; height: 1px; width: 100%; margin: 0px;"></td>
-                                                            </tr>
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <p align="center" style="color: #2e6c80;">
-                                <strong>
-                                    Please see below for the posts that fit your criteria this week!<br /><br /><br />
-                                </strong>
-                            </p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </td> 
-        """ +
-             formatted_html
-        + """
-        <p>
-            <p align="center"><strong>
-                If you want to edit your subreddit preferences, please visit <a href="">this website</a> and be sure to save your changes.
-            </strong><br/></p>
-        </p>
-        
+        <h1 style="color: #5e9ca0;">Here is your <span style="color: #2b2301;">custom weekly deals </span> email!</h1>
+        <h2 style="color: #2e6c80;">The following posts fit your criteria this week:</h2>""" + formatted_html +
+        """<p><strong>If you want to edit your subreddit preferences, please visit <a 
+        href="https://ethanbills.com/">this website</a> and be sure to save your changes.</strong><br 
+        /><strong>Enjoy!</strong></p>
         """,
         body_tables=formatted_tables,
         body_params={
