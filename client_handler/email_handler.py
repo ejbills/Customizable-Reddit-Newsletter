@@ -70,7 +70,8 @@ def send_email(email, parsed_posts_dict):
             <p align="center"><strong>
                 If you want to edit your subreddit preferences, please visit <a href="">this website</a> and be sure to save your changes.
             </strong><br/></p>
-        </p>  
+        </p>
+        
         """,
         body_tables=formatted_tables,
         body_params={
