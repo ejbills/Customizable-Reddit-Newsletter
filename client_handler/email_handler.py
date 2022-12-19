@@ -48,7 +48,7 @@ def format_array(mail_body):
         data.append(
             {
                 'Title': mail_body[i][0],
-                'Link': mail_body[i][1],
+                'URL': f"""<a href="{ mail_body[i][1] }">URL</a>""",
             }
         )
 
@@ -63,9 +63,9 @@ def format_html_body(subreddit_list):
         temp_subreddit = '{{ ' + subreddit + ' }}'
 
         output_string += f"""
-        Results from the <b>{subreddit}</b> subreddit:
+        Results from the <b>{ subreddit }</b> subreddit:
         
-        {temp_subreddit}
+        { temp_subreddit }
         <br>
         <br>
         """
