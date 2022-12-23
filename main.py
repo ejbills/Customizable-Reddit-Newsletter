@@ -6,7 +6,7 @@ import time
 import threading
 import pandas as pd
 
-from client_handler import email_handler, freebies_scrape
+from client_handler import email_handler, subreddit_scrape
 from subreddit_config import subreddit_class
 
 # Handle arguments in command line
