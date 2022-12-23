@@ -39,9 +39,8 @@ def send_email(email, parsed_posts_dict):
 
     msg.attach(MIMEText(html, 'html'))
 
-    with smtplib.SMTP('smtp.gmail.com', 587) as s:
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as s:
         s.ehlo()
-        s.starttls()
         s.login(email_user, password)
 
         s.send_message(msg)

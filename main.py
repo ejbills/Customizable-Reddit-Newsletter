@@ -1,6 +1,8 @@
 import conf.config
 
 import argparse
+import itertools
+import math
 import schedule
 import time
 import threading
@@ -8,6 +10,8 @@ import pandas as pd
 
 from client_handler import email_handler, freebies_scrape
 from subreddit_config import subreddit_class
+from multiprocessing.dummy import Pool as ThreadPool
+
 
 # Handle arguments in command line
 parser = argparse.ArgumentParser()
@@ -33,15 +37,10 @@ def main():
         time_event(arguments.daily)
 
 
-def send_freebies(is_daily_check):
-    # Handles execution of scraping posts and sending email to mailing list
-    df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
+def scrape_then_email(is_daily_check, index):
+    temp_user_obj = list(subreddit_class.SubredditConfig.user_objects.values())
 
-    # Create user objects in place
-    [subreddit_class.SubredditConfig(email, subreddit_prefs.split('+'))
-     for email, subreddit_prefs in zip(df['Email'], df['Subreddits'])]
-
-    for user_obj in subreddit_class.SubredditConfig.user_objects.values():
+    for user_obj in temp_user_obj[index[0]:index[1]]:
         parsed_posts = {}
 
         for subreddit, flair_filter in user_obj.subreddit_config.items():
@@ -57,6 +56,27 @@ def send_freebies(is_daily_check):
 
             email_handler.send_email(user_obj.email, parsed_posts)
 
+def user_pool_handler(is_daily_check):
+    # Handles execution of scraping posts and sending email to mailing list
+    df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
+
+    # Create user objects in place
+    [subreddit_class.SubredditConfig(email, subreddit_prefs.split('+'))
+     for email, subreddit_prefs in zip(df['Email'], df['Subreddits'])]
+
+    thread_amount = 4 if len(subreddit_class.SubredditConfig.user_objects) >= 4 else len(subreddit_class.SubredditConfig.user_objects)
+
+    user_len = math.floor(len(subreddit_class.SubredditConfig.user_objects) / thread_amount)
+    index_array = []
+
+    index_tracker = 0
+    for _ in range(len(subreddit_class.SubredditConfig.user_objects)):
+        index_array.append([index_tracker, index_tracker + user_len])
+        index_tracker += user_len
+
+    pool = ThreadPool(thread_amount)
+    pool.starmap(scrape_then_email, zip(itertools.repeat(is_daily_check), index_array))
+
     conf.config.scraped_subreddits = {}  # Remove submissions from completed subreddit query
 
 
@@ -64,19 +84,19 @@ def time_event(is_daily_check):
     # Handles scheduler/cron specifications
     if arguments.cron is False:  # Bypass scheduler for cron
         if not is_daily_check:  # Weekly check
-            schedule.every().week.saturday.at('06:00').do(send_freebies, is_daily_check)
+            schedule.every().week.saturday.at('06:00').do(user_pool_handler, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
 
         else:  # Daily check
-            schedule.every().day.at('18:00').do(send_freebies, is_daily_check)
+            schedule.every().day.at('18:00').do(user_pool_handler, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
 
     else:  # cron schedule specified
-        send_freebies(arguments.daily)
+        user_pool_handler(arguments.daily)
 
 
 def schedule_handler(schedule_obj, sleep_time):
