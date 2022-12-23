@@ -8,7 +8,7 @@ import time
 import threading
 import pandas as pd
 
-from client_handler import email_handler, freebies_scrape
+from client_handler import email_handler, subreddit_scrape
 from subreddit_config import subreddit_class
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -38,13 +38,14 @@ def main():
 
 
 def scrape_then_email(is_daily_check, index):
+    # Gathers reddit data and emails to recipient
     temp_user_obj = list(subreddit_class.SubredditConfig.user_objects.values())
 
     for user_obj in temp_user_obj[index[0]:index[1]]:
         parsed_posts = {}
 
         for subreddit, flair_filter in user_obj.subreddit_config.items():
-            temp_scrape = freebies_scrape.scrape_top_posts(is_daily_check,
+            temp_scrape = subreddit_scrape.scrape_top_posts(is_daily_check,
                                                            flair_filter,
                                                            subreddit)
 
@@ -52,12 +53,13 @@ def scrape_then_email(is_daily_check, index):
                 parsed_posts[subreddit] = temp_scrape
 
         if parsed_posts:  # Check if final output is not empty
-            print('Sending daily freebies') if is_daily_check else print('Sending weekly freebies')
+            print('Sending daily email') if is_daily_check else print('Sending weekly email')
 
             email_handler.send_email(user_obj.email, parsed_posts)
 
+
 def user_pool_handler(is_daily_check):
-    # Handles execution of scraping posts and sending email to mailing list
+    # Creates user objects and logic for multithreading pool
     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 
     # Create user objects in place

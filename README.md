@@ -18,7 +18,7 @@ export APP_PASS='app_pass';
 
 To run this program on a cron schedule, specify **--cron True** (runs the weekly check). To run the cron job specified for the daily check, include **--cron True --daily True** in the build command.
 
-If you wish to utilize the built-in scheduled freebies scrape, include no flags within the build command. This will default the program to run a check every Saturday at 6:00AM, with daily checks running once every day.
+If you wish to utilize the built-in scheduled reddit scrape, include no flags within the build command. This will default the program to run a check every Saturday at 6:00AM, with daily checks running once every day.
 
 ```bash
   py main.py --cron [True/False] --daily [True/False]
@@ -27,7 +27,7 @@ If you wish to utilize the built-in scheduled freebies scrape, include no flags 
 ## Docker
 To build the docker image:
 ```bash
-docker build -t freebies:latest . 
+docker build -t newsletter:latest . 
 ```
 
 To run the docker image, you must specify the key values as environment variables as follows:
@@ -36,7 +36,7 @@ docker run -e CLIENT_ID='client_id' \
 -e CLIENT_SECRET='client_secret' \
 -e EMAIL='email' \
 -e APP_PASS='app_pass' \
-freebies:latest
+newsletter:latest
 ```
 
 ## Authors
