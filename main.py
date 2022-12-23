@@ -33,7 +33,7 @@ def main():
         time_event(arguments.daily)
 
 
-def send_freebies(is_daily_check):
+def parse_reddit(is_daily_check):
     # Handles execution of scraping posts and sending email to mailing list
     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 
@@ -45,7 +45,7 @@ def send_freebies(is_daily_check):
         parsed_posts = {}
 
         for subreddit, flair_filter in user_obj.subreddit_config.items():
-            temp_scrape = freebies_scrape.scrape_top_posts(is_daily_check,
+            temp_scrape = subreddit_scrape.scrape_top_posts(is_daily_check,
                                                            flair_filter,
                                                            subreddit)
 
@@ -53,7 +53,7 @@ def send_freebies(is_daily_check):
                 parsed_posts[subreddit] = temp_scrape
 
         if parsed_posts:  # Check if final output is not empty
-            print('Sending daily freebies') if is_daily_check else print('Sending weekly freebies')
+            print('Sending daily email') if is_daily_check else print('Sending weekly email')
 
             email_handler.send_email(user_obj.email, parsed_posts)
 
@@ -64,19 +64,19 @@ def time_event(is_daily_check):
     # Handles scheduler/cron specifications
     if arguments.cron is False:  # Bypass scheduler for cron
         if not is_daily_check:  # Weekly check
-            schedule.every().week.saturday.at('06:00').do(send_freebies, is_daily_check)
+            schedule.every().week.saturday.at('06:00').do(parse_reddit, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
 
         else:  # Daily check
-            schedule.every().day.at('18:00').do(send_freebies, is_daily_check)
+            schedule.every().day.at('18:00').do(parse_reddit, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
 
     else:  # cron schedule specified
-        send_freebies(arguments.daily)
+        parse_reddit(arguments.daily)
 
 
 def schedule_handler(schedule_obj, sleep_time):
