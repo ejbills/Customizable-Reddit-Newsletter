@@ -8,7 +8,7 @@ import csv_handler
 
 
 def form():
-    subreddit_prefs = ""
+    subreddit_prefs = ''
 
     user_email = input('Input your email', required=True, validate=validate_email)
 
@@ -16,14 +16,14 @@ def form():
 
     add_subreddit = actions('Would you like to add another subreddit?', ['Yes', 'No'])
     if add_subreddit == 'Yes':
-        subreddit_prefs += "+" + format_subreddit_prefs()
+        subreddit_prefs += '+' + format_subreddit_prefs()
 
     csv_handler.add_user(user_email, subreddit_prefs)
     put_text('User info has been uploaded')
 
 
 def format_subreddit_prefs():
-    output_string = ""
+    output_string = ''
     flair_prefs = {}
 
     subreddit_info = input_group('Subreddit info', [
@@ -36,14 +36,16 @@ def format_subreddit_prefs():
     flair_prefs['restricted_flairs'] = []
 
     for flair in subreddit_info['required_flairs'].split(','):
-        flair = flair.strip()
+        if len(flair) > 0:
+            flair = flair.strip()
 
-        flair_prefs['required_flairs'].append(flair)
+            flair_prefs['required_flairs'].append(flair)
 
     for flair in subreddit_info['restricted_flairs'].split(','):
-        flair = flair.strip()
+        if len(flair) > 0:
+            flair = flair.strip()
 
-        flair_prefs['restricted_flairs'].append(flair)
+            flair_prefs['restricted_flairs'].append(flair)
 
     output_string += subreddit_info['subreddit'] + "=" + str(flair_prefs)
 

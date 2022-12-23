@@ -12,10 +12,10 @@ from subreddit_config import subreddit_class
 # Handle arguments in command line
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-c", "--cron", default=False,
-                    help="specify if using cron to schedule app functions (bypass scheduler)")
-parser.add_argument("-d", "--daily", default=False,
-                    help="specify if daily check (limited use for cron scheduler)")
+parser.add_argument('-c', '--cron', default=False,
+                    help='specify if using cron to schedule app functions (bypass scheduler)')
+parser.add_argument('-d', '--daily', default=False,
+                    help='specify if daily check (limited use for cron scheduler)')
 
 arguments = parser.parse_args()
 
@@ -23,12 +23,12 @@ arguments = parser.parse_args()
 def main():
     # Start program
     if not arguments.cron:
-        print("cron not specified, defaulting to running once a week (every Saturday @ 6AM LOCAL) with daily checks")
+        print('cron not specified, defaulting to running once a week (every Saturday @ 6AM LOCAL) with daily checks')
         time_event(False)
 
     else:
-        print("Weekly process running") if not arguments.daily else print("Daily process running")
-        print("cron specified, defaulting to running script once per script run")
+        print('Weekly process running') if not arguments.daily else print('Daily process running')
+        print('cron specified, defaulting to running script once per script run')
 
         time_event(arguments.daily)
 
@@ -53,7 +53,7 @@ def send_freebies(is_daily_check):
                 parsed_posts[subreddit] = temp_scrape
 
         if parsed_posts:  # Check if final output is not empty
-            print("Sending daily freebies") if is_daily_check else print("Sending weekly freebies")
+            print('Sending daily freebies') if is_daily_check else print('Sending weekly freebies')
 
             email_handler.send_email(user_obj.email, parsed_posts)
 
@@ -64,13 +64,13 @@ def time_event(is_daily_check):
     # Handles scheduler/cron specifications
     if arguments.cron is False:  # Bypass scheduler for cron
         if not is_daily_check:  # Weekly check
-            schedule.every().week.saturday.at("06:00").do(send_freebies, is_daily_check)
+            schedule.every().week.saturday.at('06:00').do(send_freebies, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
 
         else:  # Daily check
-            schedule.every().day.at("18:00").do(send_freebies, is_daily_check)
+            schedule.every().day.at('18:00').do(send_freebies, is_daily_check)
 
             while True:
                 schedule_handler(schedule, 30)
@@ -90,7 +90,7 @@ def schedule_handler(schedule_obj, sleep_time):
 main_thread = threading.Thread(target=main)
 daily_check_thread = threading.Thread(target=time_event, args=(True,))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main_thread.start()
 
     if not arguments.cron:

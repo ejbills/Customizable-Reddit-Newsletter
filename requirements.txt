@@ -1,5 +1,5 @@
 schedule
 pandas
-redmail
+css_inline
 praw
 pywebio
