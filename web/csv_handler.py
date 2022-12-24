@@ -19,6 +19,15 @@ def update_user_email(original_email, updated_email):
     df.to_csv('./conf/user_preferences.csv', index=None, sep=';')
 
 
+def unsubscribe_user(user_email):
+    df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
+
+    user_row = df.loc[df['Email'] == user_email]
+    df = df.drop(index=user_row.index)
+
+    df.to_csv('./conf/user_preferences.csv', index=None, sep=';')
+
+
 # def check_user_exists(user_email) -> bool:
 #     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 #     return df['Email'] == user_email
