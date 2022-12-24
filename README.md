@@ -5,7 +5,7 @@ A python script that is meant to be run on a timer every x amount of time to scr
 
 ## Deployment
 
-Configure application.yaml in the conf/ directory to specify the list of emails you want to send the results to.
+Configure user_preferences.csv in the conf/ directory to specify the list of emails and their preferences you want to send the results to. Base the formatting off of the example users inside the file.
 
 To run this command, you will need to specify multiple key values as environment variables that the script will then pull in through the OS.
 The required environment variables are as follows:
