@@ -60,5 +60,5 @@ def validate_email(email_string):
 
 
 if __name__ == '__main__':
-    start_server(form)
+    start_server(form, port=8080)
 
