@@ -1,3 +1,4 @@
+import argparse
 import re
 
 from pywebio import start_server
@@ -60,5 +61,9 @@ def validate_email(email_string):
 
 
 if __name__ == '__main__':
-    start_server(form, port=8080)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--port", type=int, default=8080)
+    args = parser.parse_args()
+
+    start_server(form, port=args.port)
 
