@@ -12,7 +12,7 @@ email_user = environ['EMAIL']
 password = environ['APP_PASS']
 
 
-def send_email(email, parsed_posts_dict):
+def send_email(daily_check, email, parsed_posts_dict):
     # Sends email
     msg = MIMEMultipart('alternative')
 
@@ -25,15 +25,21 @@ def send_email(email, parsed_posts_dict):
     for subreddit in parsed_posts_dict.keys():  # Convert data into HTML table
         formatted_tables += array_to_html(subreddit, parsed_posts_dict[subreddit]) + '<br>'
 
-    html = """
+    html = f"""
     <h1 style="color: #7099c2">Customized Reddit Newsletter</h1>
-    <h2 style="color: #7099c2">Please see below for the posts that fit your criteria this week!</h2>
+    <h2 style="color: #7099c2">{ "There is some popular posts from your subreddit list today, see them below!" 
+                                 if daily_check else 
+                                 "Please see below for the posts that fit your criteria this week!" }</h2>
     """ + formatted_tables + """
     <p>
-        <strong>If you want to edit your subreddit preferences, please visit 
-            <a href="https://ethanbills.com/">this website</a> and be sure to save your changes.
-        </strong><br/>
-        <strong>Enjoy!</strong>
+        <strong>
+            If you want to edit your subreddit preferences, please visit 
+            <a href="https://ethanbills.com/">this website</a> and be sure to save your changes.<br/>
+        </strong>
+        <strong>
+            Enjoy!<br/>
+        </strong>
+        <a href="https://ethanbills.com/unsubscribe">Click here to unsubscribe</a>
     </p>
     """
 

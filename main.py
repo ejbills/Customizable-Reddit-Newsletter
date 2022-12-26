@@ -33,7 +33,7 @@ def main():
         time_event(arguments.daily)
 
 
-def parse_reddit(is_daily_check):
+def parse_reddit(daily_check):
     # Handles execution of scraping posts and sending email to mailing list
     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 
@@ -45,17 +45,17 @@ def parse_reddit(is_daily_check):
         parsed_posts = {}
 
         for subreddit, flair_filter in user_obj.subreddit_config.items():
-            temp_scrape = subreddit_scrape.scrape_top_posts(is_daily_check,
-                                                           flair_filter,
-                                                           subreddit)
+            temp_scrape = subreddit_scrape.scrape_top_posts(daily_check,
+                                                            flair_filter,
+                                                            subreddit)
 
             if len(temp_scrape) > 0:  # Check if any results were returned
                 parsed_posts[subreddit] = temp_scrape
 
         if parsed_posts:  # Check if final output is not empty
-            print('Sending daily email') if is_daily_check else print('Sending weekly email')
+            print('Sending daily email') if daily_check else print('Sending weekly email')
 
-            email_handler.send_email(user_obj.email, parsed_posts)
+            email_handler.send_email(daily_check, user_obj.email, parsed_posts)
 
     conf.config.scraped_subreddits = {}  # Remove submissions from completed subreddit query
 
