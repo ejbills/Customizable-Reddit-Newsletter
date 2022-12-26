@@ -2,4 +2,7 @@ schedule
 pandas
 css_inline
 praw
+
+# Web requirements
 pywebio
+paramiko
