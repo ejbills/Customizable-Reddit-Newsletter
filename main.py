@@ -86,11 +86,11 @@ def schedule_handler(schedule_obj, sleep_time):
     time.sleep(sleep_time * 60)
 
 
-# Threading needs the extra comma in the args field or else it thinks it is more than one argument (requires tuple)
-main_thread = threading.Thread(target=main)
-daily_check_thread = threading.Thread(target=time_event, args=(True,))
-
 if __name__ == '__main__':
+    # Start threads
+    main_thread = threading.Thread(target=main)
+    daily_check_thread = threading.Thread(target=time_event, args=(True,))
+
     main_thread.start()
 
     if not arguments.cron:
