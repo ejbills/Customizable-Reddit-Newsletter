@@ -98,6 +98,3 @@ if __name__ == '__main__':
     if not arguments.cron:
         daily_thread.start()
         daily_thread.join()
-
-
-
