@@ -93,8 +93,9 @@ if __name__ == '__main__':
     daily_thread = Process(target=time_event, args=(True,))
 
     weekly_thread.start()
-    weekly_thread.join()
 
     if not arguments.cron:
         daily_thread.start()
         daily_thread.join()
+
+    weekly_thread.join()
