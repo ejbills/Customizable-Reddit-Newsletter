@@ -3,8 +3,9 @@ import conf.config
 import argparse
 import schedule
 import time
-import threading
 import pandas as pd
+
+from multiprocessing import Process
 
 from client_handler import email_handler, subreddit_scrape
 from subreddit_config import subreddit_class
@@ -88,10 +89,15 @@ def schedule_handler(schedule_obj, sleep_time):
 
 if __name__ == '__main__':
     # Start threads
-    main_thread = threading.Thread(target=main)
-    daily_check_thread = threading.Thread(target=time_event, args=(True,))
+    weekly_thread = Process(target=main)
+    daily_thread = Process(target=time_event, args=(True,))
 
-    main_thread.start()
+    weekly_thread.start()
+    weekly_thread.join()
 
     if not arguments.cron:
-        daily_check_thread.start()
+        daily_thread.start()
+        daily_thread.join()
+
+
+
