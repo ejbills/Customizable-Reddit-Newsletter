@@ -1,7 +1,7 @@
 
 # Customizable Reddit Newsletter
 
-A python script that is meant to be run on a timer every x amount of time to scrape the top posts of a users subreddit and flair preferences. The script will send an email to the specified recipient(s) within the config file. The script is meant to be run no less than once a week as that is how it is scraping the top posts.
+Turn any list of subreddits into a custom newsletter with support for flair filters and multiple user emails!
 
 ## Deployment
 
