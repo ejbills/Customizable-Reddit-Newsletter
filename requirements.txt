@@ -2,6 +2,7 @@ schedule
 pandas
 css_inline
 praw
+prawcore
 
 # Web requirements
 pywebio

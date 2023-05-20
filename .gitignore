@@ -2,3 +2,4 @@
 .venv
 
 ./conf/application.yaml
+./conf/user_preferences.csv

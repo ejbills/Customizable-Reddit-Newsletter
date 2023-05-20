@@ -27,7 +27,7 @@ def send_email(daily_check, email, parsed_posts_dict):
 
     html = f"""
     <h1 style="color: #7099c2">Customized Reddit Newsletter</h1>
-    <h2 style="color: #7099c2">{ "There is some popular posts from your subreddit list today, see them below!" 
+    <h2 style="color: #7099c2">{ "There are some popular posts from your subreddit list today. See them below!" 
                                  if daily_check else 
                                  "Please see below for the posts that fit your criteria this week!" }</h2>
     """ + formatted_tables + """
