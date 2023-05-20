@@ -62,28 +62,30 @@ def array_to_html(subreddit_name, mail_body):
             {
                 'Title': mail_body[i][0],
                 'URL': f'<a href="{ mail_body[i][1] }">URL</a>',
+                'See it on Reddit': f'<a href="{ mail_body[i][2] }">Reddit Link</a>'
             }
         )
 
     df = pd.DataFrame(data)
 
     styles = [
+        dict(selector='table', props=[('border-collapse', 'separate'),
+                                      ('border-radius', '25px')]),
+        dict(selector='th', props=[('background-color', '#c9c7c7'),
+                                   ('padding', '10px 15px 10px 15px'),
+                                   ('font-size', '17px')]),
+        dict(selector='th:first-child', props=[('border-radius', '25px 0 0 0')]),
+        dict(selector='th:last-child', props=[('border-radius', '0 25px 0 0')]),
+        dict(selector='tr:last-child td:first-child', props=[('border-radius', '0 0 0 25px')]),
+        dict(selector='tr:last-child td:last-child', props=[('border-radius', '0 0 25px 0;'), ]),
         dict(selector='tr:nth-child(even)', props=[('background-color', '#f5f5f5')]),
-        dict(selector='th', props=[('padding-top', '0.3em'),
-                                   ('padding-bottom', '0.3em'),
-                                   ('background-color', '#f5f5f5'),
-                                   ('font-size', '18px'),
-                                   ('width', '100%')
-                                   ]),
-        dict(selector='td', props=[('font-size', '14px'),
-                                   ('padding', '4px'),
-                                   ('border-width', '0'),
+        dict(selector='td', props=[('border-width', '0'),
                                    ('margin', '0'),
-                                   ]),
+                                   ('padding', '15px 15px 15px 15px')])
     ]
 
     style = df.style.set_table_styles(styles)\
                     .hide(axis='index')\
-                    .set_caption(f'Results from the <b>{ subreddit_name }</b> subreddit')
+                    .set_caption(f'Results from <b>{ subreddit_name }</b>')
 
     return CSSInliner().inline(style.to_html())

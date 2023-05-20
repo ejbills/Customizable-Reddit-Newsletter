@@ -37,11 +37,13 @@ def scrape_top_posts(daily_check, filter_dict, subreddit) -> list:
 
         if not daily_check:
             if contains_flairs(filter_dict, submission) and not is_stickied(submission):
-                parsed_submissions.append([submission.title, submission.url])
+                parsed_submissions.append([submission.title, submission.url,
+                                           reddit.config.reddit_url + submission.permalink])
 
         else:
             if is_urgent(submission) and contains_flairs(filter_dict, submission) and not is_stickied(submission):
-                parsed_submissions.append([submission.title, submission.url])
+                parsed_submissions.append([submission.title, submission.url,
+                                           reddit.config.reddit_url + submission.permalink])
 
     conf.config.scraped_subreddits[subreddit] = temp_submission_stream
 
