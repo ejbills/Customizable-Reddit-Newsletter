@@ -25,22 +25,68 @@ def send_email(daily_check, email, parsed_posts_dict):
     for subreddit in parsed_posts_dict.keys():  # Convert data into HTML table
         formatted_tables += array_to_html(subreddit, parsed_posts_dict[subreddit]) + '<br>'
 
-    html = f"""
-    <h1 style="color: #7099c2">Customized Reddit Newsletter</h1>
-    <h2 style="color: #7099c2">{ "There are some popular posts from your subreddit list today. See them below!" 
+    html = """
+    <html>
+      <body style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
+        <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Ding! Your newsletter is ready.</span>
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f6f6f6; width: 100%;" width="100%" bgcolor="#f6f6f6">
+          <tr>
+            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 580px; padding: 10px; width: 580px; margin: 0 auto;" width="580" valign="top">
+              <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 580px; padding: 10px;">
+    
+                <!-- START CENTERED WHITE CONTAINER -->
+                <table role="presentation" class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background: #ffffff; border-radius: 3px; width: 100%;" width="100%">
+    
+                  <!-- START MAIN CONTENT AREA -->
+                  <tr>
+                    <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;" valign="top">
+                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%">
+                        <tr>
+                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
+                             <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">
+                            """ + f"""
+                                <h1 style="font-family: sans-serif; font-size: 28px; vertical-align: top; color: ded4b8;" valign="top">Customized Reddit Newsletter</h1>
+                                <h2 style="font-family: sans-serif; font-size: 20px; vertical-align: top; color: ded4b8;" valign="top">{ "There are some popular posts from your subreddit list today. See them below!" 
                                  if daily_check else 
                                  "Please see below for the posts that fit your criteria this week!" }</h2>
-    """ + formatted_tables + """
-    <p>
-        <strong>
-            If you want to edit your subreddit preferences, please visit 
-            <a href="https://ethanbills.com/">this website</a> and be sure to save your changes.<br/>
-        </strong>
-        <strong>
-            Enjoy!<br/>
-        </strong>
-        <a href="https://ethanbills.com/unsubscribe">Click here to unsubscribe</a>
-    </p>
+                            """ + """
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; box-sizing: border-box; width: 100%;" width="100%">
+                              <tbody>
+                                <tr>
+                                """ + formatted_tables + """
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+    
+                <!-- END MAIN CONTENT AREA -->
+                </table>
+                <!-- END CENTERED WHITE CONTAINER -->
+    
+                <!-- START FOOTER -->
+                <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%">
+                    <tr>
+                      <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #999999; font-size: 12px; text-align: center;" valign="top" align="center">
+                        <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Made by Ethan Bills in Los Angeles, CA</span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <!-- END FOOTER -->
+    
+              </div>
+            </td>
+            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+          </tr>
+        </table>
+      </body>
+    </html>
     """
 
     msg.attach(MIMEText(html, 'html'))
