@@ -15,6 +15,10 @@ export CLIENT_SECRET='client_secret'; \
 export EMAIL='email'; \
 export APP_PASS='app_pass'; 
 ```
+*note:*
+- Client ID and Client Secret are generated through reddit via "creating an app." You can do that [through this URL.](https://www.reddit.com/prefs/apps)
+- Email is going to be the email you are sending the newsletter from, this codebase has only been tested and verified to work through Gmail accounts.
+- App Password is the application password for the gmail account you will be sending the newsletter from. You can generate an app password by [following this Google documentation.](https://support.google.com/accounts/answer/185833?hl=en)
 
 To run this program on a cron schedule, specify **--cron True** (runs the weekly check). To run the cron job specified for the daily check, include **--cron True --daily True** in the build command.
 
