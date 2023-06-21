@@ -3,7 +3,6 @@ import conf.config
 import praw
 
 from os import environ
-from prawcore import PrawcoreException
 
 client_id = environ['CLIENT_ID']
 client_secret = environ['CLIENT_SECRET']
@@ -23,11 +22,7 @@ def scrape_top_posts(daily_check, filter_dict, subreddit) -> list:
 
     # Check if subreddit previously scraped
     if subreddit not in conf.config.scraped_subreddits.keys():
-        try:
-            subreddit_stream = reddit.subreddit(subreddit).top('day' if daily_check else 'week')
-
-        except PrawcoreException as e:
-            print("Critical API call error - passing empty subreddit stream.", e)
+        subreddit_stream = reddit.subreddit(subreddit).top('day' if daily_check else 'week')
 
     else:
         subreddit_stream = conf.config.scraped_subreddits[subreddit]

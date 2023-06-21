@@ -6,6 +6,7 @@ import time
 import pandas as pd
 
 from multiprocessing import Process
+from prawcore import PrawcoreException, Forbidden
 
 from client_handler import email_handler, subreddit_scrape
 from subreddit_config import subreddit_class
@@ -46,9 +47,17 @@ def parse_reddit(daily_check):
         parsed_posts = {}
 
         for subreddit, flair_filter in user_obj.subreddit_config.items():
-            temp_scrape = subreddit_scrape.scrape_top_posts(daily_check,
-                                                            flair_filter,
-                                                            subreddit)
+            temp_scrape = []
+
+            try:
+                temp_scrape = subreddit_scrape.scrape_top_posts(daily_check,
+                                                                flair_filter,
+                                                                subreddit)
+            except Forbidden as e:
+                print("Forbidden, continuing.", e)
+
+            except PrawcoreException as e:
+                print("Critical API call error - passing empty subreddit stream.", e)
 
             if len(temp_scrape) > 0:  # Check if any results were returned
                 parsed_posts[subreddit] = temp_scrape
