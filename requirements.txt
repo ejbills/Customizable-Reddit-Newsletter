@@ -3,6 +3,8 @@ pandas
 css_inline
 praw
 prawcore
+pyarrow
+jinja2
 
 # Web requirements
 pywebio
