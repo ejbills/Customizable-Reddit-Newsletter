@@ -3,7 +3,5 @@ pandas
 css_inline
 praw
 prawcore
-
-# Web requirements
-pywebio
-paramiko
+pyarrow
+jinja2
