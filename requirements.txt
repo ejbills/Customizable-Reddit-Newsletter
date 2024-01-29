@@ -5,7 +5,3 @@ praw
 prawcore
 pyarrow
 jinja2
-
-# Web requirements
-pywebio
-paramiko

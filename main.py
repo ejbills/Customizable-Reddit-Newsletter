@@ -1,6 +1,7 @@
 import conf.config
 
 import argparse
+import ast
 import schedule
 import time
 import pandas as pd
@@ -9,7 +10,6 @@ from multiprocessing import Process
 from prawcore import PrawcoreException, Forbidden
 
 from client_handler import email_handler, subreddit_scrape
-from subreddit_config import subreddit_class
 
 # Handle arguments in command line
 parser = argparse.ArgumentParser()
@@ -39,20 +39,22 @@ def parse_reddit(daily_check):
     # Handles execution of scraping posts and sending email to mailing list
     df = pd.read_csv('./conf/user_preferences.csv', delimiter=';')
 
-    # Create user objects in place
-    [subreddit_class.SubredditConfig(email, subreddit_prefs.split('+'))
-     for email, subreddit_prefs in zip(df['Email'], df['Subreddits'])]
+    for index, row in df.iterrows():
+        email = row['Email']
+        queries = row['Query'].split('+')  # queries are grouped into one category, separated by +
 
-    for user_obj in subreddit_class.SubredditConfig.user_objects.values():
         parsed_posts = {}
 
-        for subreddit, flair_filter in user_obj.subreddit_config.items():
+        for query in queries:
+            query_term, query_config = query.split('=')
+            query_config = dict(ast.literal_eval(query_config))  # query will be in python dict format
+
             temp_scrape = []
 
             try:
                 temp_scrape = subreddit_scrape.scrape_top_posts(daily_check,
-                                                                flair_filter,
-                                                                subreddit)
+                                                                query_config,
+                                                                query_term)
             except Forbidden as e:
                 print("Forbidden, continuing.", e)
 
@@ -60,14 +62,14 @@ def parse_reddit(daily_check):
                 print("Critical API call error - passing empty subreddit stream.", e)
 
             if len(temp_scrape) > 0:  # Check if any results were returned
-                parsed_posts[subreddit] = temp_scrape
+                parsed_posts[query_term] = temp_scrape
 
         if parsed_posts:  # Check if final output is not empty
             print('Sending daily email') if daily_check else print('Sending weekly email')
 
-            email_handler.send_email(daily_check, user_obj.email, parsed_posts)
+            email_handler.send_email(daily_check, email, parsed_posts)
 
-    conf.config.scraped_subreddits = {}  # Remove submissions from completed subreddit query
+    conf.config.prev_searched_queries = {}  # Remove submissions from completed subreddit query
 
 
 def time_event(is_daily_check):
